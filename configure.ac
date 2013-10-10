@@ -1,6 +1,8 @@
 #                                               -*- Autoconf -*-
 
 AC_INIT([mbench], [0.2])
+
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 LT_INIT
 AM_INIT_AUTOMAKE([foreign -Wall subdir-objects])
 AC_PREREQ(2.63)
@@ -14,7 +16,9 @@ AC_CONFIG_FILES([
 	src/Makefile
 	src/lib/Makefile
 	src/compiler/Makefile
-	src/compiler/mbench_bc], [chmod +x src/compiler/mbench_bc])
+	src/compiler/mbench_bc])
+AC_CONFIG_COMMANDS([chmoding-scripts], [
+	chmod +x src/compiler/mbench_bc])
 
 AC_CHECK_FUNCS([strdup alloca malloc realloc gethostname getpagesize])
 AC_CHECK_FUNCS([gettimeofday mkdir strstr])
