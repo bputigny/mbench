@@ -86,6 +86,7 @@ num_lst
 
 function
 : ID '(' arg_lst ')'			{$$.name = $1; $$.arg = $3;}
+| ID '(' ')'					{$$.name = $1; $$.arg = "";}
 ;
 
 arg_lst
