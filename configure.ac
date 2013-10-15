@@ -10,6 +10,7 @@ AC_PROG_CC
 AC_PROG_LEX
 AC_PROG_YACC
 AC_PROG_LIBTOOL
+AC_LANG([C])
 
 AC_CONFIG_FILES([
 	Makefile
@@ -46,9 +47,19 @@ CPPFLAGS="$CPPFLAGS $PAPI_CPPFLAGS"
 CFLAGS="$CFLAGS $PAPI_CFLAGS -fopenmp -Wall"
 LDFLAGS="$PAPI_LIBS $LDFLAGS"
 
+AC_MSG_CHECKING([if the assembler supports vmovaps and %ymm0])
+AC_COMPILE_IFELSE(
+  [AC_LANG_SOURCE([
+    void f(void) { void *buffer; __asm__ __volatile__("vmovaps (%%rbx), %%ymm0;" : : "b"(buffer) : "%ymm0"); }
+  ])], [avx_supported=yes], [avx_supported=no])
+AC_MSG_RESULT($avx_supported)
+
+AC_MSG_CHECKING([if AVX is enabled])
 AC_ARG_ENABLE([avx],
 	      AS_HELP_STRING([--disable-avx],
-			[Disable AVX extention]))
+			[Disable AVX extention]),
+	      [enable_avx=$enableval], [enable_avx=$avx_supported])
+AC_MSG_RESULT($enable_avx)
 
 AS_IF([test "x$enable_avx" != "xno"], [
 	    CPPFLAGS="$CPPFLAGS -DUSE_AVX"
