@@ -13,6 +13,8 @@ SPACE			[ \t]
 "thread"		{ return THREAD; }
 "time"			{ return TIME; }
 "kb"|"kB"|"Kb"|"KB"	{ yylval.num = 1024; return UNIT; }
+"mb"|"mB"|"Mb"|"MB"	{ yylval.num = 1024*1024; return UNIT; }
+"gb"|"gB"|"Gb"|"GB"	{ yylval.num = 1024*1024*1024; return UNIT; }
 "runtime"		{ yylval.num = -1; return RUNTIME_SIZE; }
 {L}({L}|{D})*		{ yylval.str = strdup (yytext); return ID; }
 {D}+			{ yylval.num = atoi (yytext); return NUM; }
