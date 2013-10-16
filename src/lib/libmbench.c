@@ -262,7 +262,9 @@ void mbench_flush_stream (stream_t *s) {
 	if (s->stream) {
 		__asm__ __volatile__("mfence;"::);
 		for (i=0; i<s->size; i+=16) {
-			__asm__ __volatile__("clflush (%%rax);":: "a" (&addr[i]));
+			__asm__ __volatile__("clflush (%0);"
+					:
+					: "r" (&addr[i]));
 		}
 		__asm__ __volatile__("mfence;"::);
 	}
