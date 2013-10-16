@@ -19,7 +19,8 @@ perf_t llls(stream_t *src1, stream_t *src2, stream_t *src3, stream_t *dest);
 perf_t mbench_ddot(stream_t *s0, stream_t *s1);
 perf_t mbench_daxpy(stream_t *s0, stream_t *s1);
 
-perf_t mbench_barrier();
+perf_t barrier();
+perf_t clflush(stream_t *s);
 
 perf_t latency_load(stream_t *stream);
 

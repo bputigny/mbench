@@ -1,6 +1,6 @@
 #include <bench.h>
 
-perf_t mbench_clflush(stream_t *s) {
+perf_t clflush(stream_t *s) {
 	char *addr = s->stream;
 	int i; 
 
