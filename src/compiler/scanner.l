@@ -19,7 +19,7 @@ SPACE		[ \t]
 "gb"|"gB"|"Gb"|"GB"	{ if (!comment) {yylval.num = 1024*1024*1024; return UNIT;} }
 "runtime"		{ if (!comment) {yylval.num = -1; return RUNTIME_SIZE;} }
 {L}({L}|{D})*	{ if (!comment) {yylval.str = strdup (yytext); return ID;} }
-{D}+			{ yylval.num = atoi (yytext); return NUM; }
+{D}+			{ if (!comment) {yylval.num = atoi (yytext); return NUM;} }
 {SPACE}			{ /* DO NOTHING	*/ }
 \n			{ line++; comment = 0; }
 .			{ if (!comment) return *yytext; }
