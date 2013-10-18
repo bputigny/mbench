@@ -13,7 +13,10 @@ else
 fi
 echo "Output binary: $output"
 
-temp=$(mktemp --suffix=".c")
+temp=$(mktemp --suffix 2>/dev/null)
+# old mktemp doesn't support --suffix, emulate it
+if test -z $temp; then temp=$(mktemp) ; mv -f $temp $temp.c ; temp=$temp.c ; fi
+
 @prefix@/@bindir@/mbench_cgen $1 -o $temp
 
 if test $? -eq 0; then
