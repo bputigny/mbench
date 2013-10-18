@@ -8,6 +8,8 @@ fi
 output=""
 if test "$2" = ""; then
 	output=`echo $1 | sed 's/\.b$//'`
+else
+	output=$2
 fi
 echo "Output binary: $output"
 
