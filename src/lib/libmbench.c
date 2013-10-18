@@ -76,6 +76,9 @@ stream_t *mbench_stream_new (uint64_t size, size_t align) {
 	if (s->allocated % huge_page_size) {
 		s->allocated = ((s->allocated / huge_page_size) + 1) * huge_page_size;
 	}
+#ifndef MAP_HUGETLB
+#define MAP_HUGETLB 0
+#endif
 	s->buffer = mmap (NULL, s->allocated,
 			PROT_READ|PROT_WRITE ,
 			MAP_PRIVATE|MAP_ANONYMOUS|MAP_HUGETLB,
