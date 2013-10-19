@@ -282,8 +282,8 @@ void mbench_add_run (run_t *tab, perf_t perf, uint64_t c, int rep, int th) {
 
 void mbench_print_results (run_t *run_table, int nthreads) {
 	int i, r;
-	char *csv_filename;
-	char *dat_filename;
+	char *csv_filename = NULL;
+	char *dat_filename = NULL;
 
 	static int count = 0;
 
