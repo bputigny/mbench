@@ -126,6 +126,10 @@ int main (int argc, char* argv[]) {
 	int file = 0;
         while ((optind + file) < argc) {
 	    yyin = fopen (argv[optind + file], "r");
+	    if (!yyin) {
+		fprintf (stderr, "Error: cannot open input file %s\n", argv[optind + file]);
+		exit (EXIT_FAILURE);
+	    }
 	    file_name = argv[optind + file];
 	    file ++;
 	}
