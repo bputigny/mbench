@@ -35,14 +35,12 @@ AC_FUNC_ALLOCA
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 
-PAPI_FLAGS=""
 AC_ARG_WITH([papi],
 	[AS_HELP_STRING([--with-papi],
 		[enable support for PAPI library])],
 	[PAPI_LIBS="-L$withval/lib -lpapi" PAPI_CFLAGS="-I$withval/include" PAPI_CPPFLAGS="-DUSE_PAPI"],
 	[with_papi=no])
 
-AC_SUBST(PAPI_FLAGS)
 CPPFLAGS="$CPPFLAGS $PAPI_CPPFLAGS"
 CFLAGS="$CFLAGS $PAPI_CFLAGS -fopenmp -Wall"
 LDFLAGS="$PAPI_LIBS $LDFLAGS"

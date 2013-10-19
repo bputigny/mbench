@@ -26,7 +26,7 @@ if test $? -eq 0; then
 		OMPFLAGS=-fopenmp
 	fi
 
-    @CC@ -Wall -I@prefix@/@includedir@ -L@prefix@/lib -lmbench @CFLAGS@ @LDFLAGS@ @PAPI_FLAGS@ $OMPFLAGS -o $output $temp
+    @CC@ -Wall -I@prefix@/@includedir@ -L@prefix@/lib -lmbench @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ $OMPFLAGS -o $output $temp
     rm $temp
 fi
 
