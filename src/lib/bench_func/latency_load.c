@@ -1,7 +1,7 @@
 #include <bench.h>
 
 
-perf_t latency_load (stream_t *stream) {
+perf_t mbench_latency_load (stream_t *stream) {
     perf_t ret = {0, 0};
     int cpt = 0;
     if (stream->size >= 128) {

@@ -101,7 +101,7 @@ void write_binding (binding_t binding) {
 
 void write_function_call (func_t func) {
     fprintf (outfile, " {\n");
-    fprintf (outfile, "tmp = %s(%s);\n",
+    fprintf (outfile, "tmp = mbench_%s(%s);\n",
 	     func.name,
 	     func.arg);
     fprintf (outfile, " p.bytes += tmp.bytes;\n");

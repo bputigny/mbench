@@ -111,7 +111,7 @@ void mbench_stream_free (stream_t *s) {
 	free (s);
 }
 
-inline uint64_t rdtsc () {
+inline uint64_t mbench_rdtsc () {
 	uint64_t ret;
 	__asm__ __volatile__(
 			"rdtsc;"
@@ -127,10 +127,10 @@ uint64_t mbench_get_cpu_freq () {
 	struct timeval tv_start, tv_stop;
 	struct timespec delay = { 0, 800000000 };
 
-	ts_start = rdtsc ();
+	ts_start = mbench_rdtsc ();
 	gettimeofday (&tv_start, NULL);
 	nanosleep (&delay, NULL);
-	ts_stop = rdtsc ();
+	ts_stop = mbench_rdtsc ();
 	gettimeofday (&tv_stop, NULL);
 
 	uint64_t f = 1000000 * (ts_stop - ts_start) /

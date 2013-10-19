@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <unistd.h> 
 
-#define TIMER_START	{t = rdtsc (); p.bytes = 0; p.instructions = 0;}
-#define TIMER_STOP	{t = rdtsc () - t;}
+#define TIMER_START	{t = mbench_rdtsc (); p.bytes = 0; p.instructions = 0;}
+#define TIMER_STOP	{t = mbench_rdtsc () - t;}
 
 #define BEGIN_SIZE_LOOP							\
     mbench_progress_bar (0);						\
@@ -46,7 +46,7 @@ typedef struct {
 
 stream_t *mbench_stream_new (uint64_t size, size_t align);
 void mbench_stream_free (stream_t *s);
-inline uint64_t rdtsc ();
+inline uint64_t mbench_rdtsc ();
 uint64_t mbench_get_cpu_freq ();
 void mbench_parse_args (int argc, char *argv[]);
 void mbench_flush_stream (stream_t *s);

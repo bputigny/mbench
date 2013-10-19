@@ -1,7 +1,7 @@
 #include <bench.h>
 
 
-perf_t ll (stream_t *src1, stream_t *src2) {
+perf_t mbench_ll (stream_t *src1, stream_t *src2) {
     perf_t ret = {0, 0};
 
     if (src1->size >= 128) {

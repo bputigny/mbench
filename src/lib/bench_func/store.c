@@ -1,7 +1,7 @@
 #include <bench.h>
 
 
-perf_t store (stream_t *s) {
+perf_t mbench_store (stream_t *s) {
     perf_t ret = {s->size, s->size/16};
     if (s->size >= 128) {
 	__asm__ __volatile__(

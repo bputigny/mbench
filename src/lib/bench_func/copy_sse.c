@@ -1,7 +1,7 @@
 #include <bench.h>
 
 
-perf_t copy_sse (stream_t *dest, stream_t *src) {
+perf_t mbench_copy_sse (stream_t *dest, stream_t *src) {
     perf_t ret = {src->size, 2*src->size / 16};
 
     if (dest->size >= 128) {
