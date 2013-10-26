@@ -4,6 +4,7 @@
 
 extern stream_tab_t *stream_tab;
 extern run_tab_t *run_tab;
+extern unsigned thread_id_max;
 extern FILE *outfile;
 
 void generate_run (run_tab_t *run_table);
@@ -167,7 +168,9 @@ void generate_main (stream_tab_t *stream_tab, run_tab_t *run_tab) {
     fprintf (outfile, "    uint64_t *runtime_cycles;\n");
     fprintf (outfile, "    perf_t *perf;\n");
     fprintf (outfile, "    uint64_t cur;\n");
-    fprintf (outfile, "    int nthreads, r;\n");
+    fprintf (outfile, "    int nthreads = %u, r;\n", thread_id_max+1);
+
+    fprintf (outfile, "    omp_set_num_threads (nthreads);\n");
 
     fprintf (outfile, "    BEGIN_SIZE_LOOP\n");
 
@@ -175,7 +178,6 @@ void generate_main (stream_tab_t *stream_tab, run_tab_t *run_tab) {
     fprintf (outfile, "    {\n");
     fprintf (outfile, "        #pragma omp master\n");
     fprintf (outfile, "        {\n");
-    fprintf (outfile, "        nthreads = omp_get_num_threads ();\n");
     fprintf (outfile, "        runtime_cycles = \n");
     fprintf (outfile, "            malloc (nthreads * sizeof *runtime_cycles);\n");
     fprintf (outfile, "        perf = \n");

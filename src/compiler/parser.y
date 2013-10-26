@@ -12,6 +12,7 @@
 
 stream_tab_t *stream_tab = NULL;
 run_tab_t *run_tab = NULL;
+unsigned thread_id_max = 0;
 %}
 
 %union {
@@ -76,12 +77,12 @@ basic_run
 
 binding
 : num_lst	       			{$$.num_table = $1;; $$.type=LIST;}
-| NUM '-' NUM				{$$.start = $1; $$.stop = $3; $$.type=RANGE;}
+| NUM '-' NUM				{$$.start = $1; $$.stop = $3; $$.type=RANGE; if ($3>thread_id_max) thread_id_max = $3;}
 ;
 
 num_lst
-: num_lst ',' NUM			{num_table_add ($$, $3);}
-| NUM					{$$ = num_table_new (); num_table_add ($$, $1);}
+: num_lst ',' NUM			{num_table_add ($$, $3); if ($3>thread_id_max) thread_id_max = $3; }
+| NUM					{$$ = num_table_new (); num_table_add ($$, $1); if ($1>thread_id_max) thread_id_max = $1;}
 ;
 
 function
