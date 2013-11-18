@@ -20,13 +20,7 @@ if test -z $temp; then temp=$(mktemp) ; mv -f $temp $temp.c ; temp=$temp.c ; fi
 @prefix@/@bindir@/mbench_cgen $1 -o $temp
 
 if test $? -eq 0; then
-	if test "@CC@" = "icc"; then
-		OMPFLAGS=-openmp
-	else
-		OMPFLAGS=-fopenmp
-	fi
-
-    @CC@ -Wall -I@prefix@/@includedir@ -L@prefix@/lib -lmbench @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ $OMPFLAGS -o $output $temp
+    @CC@ -I@prefix@/@includedir@ -L@prefix@/lib @CFLAGS@ @CPPFLAGS@ -o $output $temp -lmbench @LDFLAGS@ 
     rm $temp
 fi
 

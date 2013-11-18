@@ -30,7 +30,6 @@ void generate_declaration (stream_tab_t *stream_tab) {
     for (i=0; i<stream_tab->used_size; i++) {
 	fprintf (outfile, "stream_t *%s;\n", stream_tab->table[i].id);
     }
-    fprintf (outfile, "uint64_t mbench_size = 0;\n");
     fprintf (outfile, "run_t *run_table = NULL;\n");
     fprintf (outfile, "\n");
 }
