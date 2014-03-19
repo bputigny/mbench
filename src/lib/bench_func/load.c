@@ -5,9 +5,14 @@ perf_t mbench_load (stream_t *s) {
     perf_t ret = {s->size, s->size/16};
     if (s->size >= 128) {
 	__asm__ __volatile__(
+#ifndef USE_MIC
 	    "mfence;"
+#endif
 	    "_loop:"
-#ifdef USE_AVX
+#ifdef USE_MIC
+	    "vmovaps (%%rbx), %%zmm0;"
+	    "vmovaps 64(%%rbx), %%zmm0;"
+#elif (defined USE_AVX)
 	    "vmovaps (%%rbx), %%ymm0;"
 	    "vmovaps 32(%%rbx), %%ymm0;"
 	    "vmovaps 64(%%rbx), %%ymm0;"
@@ -25,10 +30,14 @@ perf_t mbench_load (stream_t *s) {
 	    "add $128, %%rbx;"
 	    "sub $128, %%rcx;"
 	    "jnz _loop;"
+#ifndef USE_MIC
 	    "mfence;"
+#endif
 	    :
 	    : "b"(s->stream), "c" (s->size)
-#ifdef USE_AVX
+#ifdef USE_MIC
+            : "%zmm0"
+#elif (defined USE_AVX)
 	    : "%ymm0"
 #else
 	    : "%xmm0"
@@ -37,3 +46,4 @@ perf_t mbench_load (stream_t *s) {
     }
     return ret;
 }
+

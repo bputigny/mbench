@@ -3,7 +3,7 @@ BUILT_SOURCES	= parser.h
 AM_YFLAGS	= -d
 AM_CFLAGS	= -I$(srcdir)/include
 
-
+CC	= $(HOSTCC)
 bin_SCRIPTS	= mbench_bc
 CLEANFILES	= $(bin_SCRIPTS)
 bin_PROGRAMS	= mbench_cgen

@@ -6,6 +6,19 @@ perf_t mbench_copy_sse (stream_t *dest, stream_t *src) {
 
     if (dest->size >= 128) {
 	__asm__ __volatile__(
+#ifdef USE_MIC
+	    "_loop:"
+	    "vmovaps (%%rbx), %%zmm0;"
+	    "vmovaps %%zmm0, (%%rax);"
+
+	    "vmovaps 64(%%rbx), %%zmm0;"
+	    "vmovaps %%zmm0, 64(%%rax);"
+
+	    "add $128, %%rax;"
+	    "add $128, %%rbx;"
+	    "sub $128, %%rcx;"
+	    "jnz _loop;"
+#else
 	    "mfence;"
 	    "_loop:"
 	    "movaps (%%rbx), %%xmm0;"
@@ -37,9 +50,14 @@ perf_t mbench_copy_sse (stream_t *dest, stream_t *src) {
 	    "sub $128, %%rcx;"
 	    "jnz _loop;"
 	    "mfence;"
+#endif
 	    :
 	    : "a" (dest->stream), "b"(src->stream), "c" (dest->size)
+#ifdef USE_MIC
+	    : "%zmm0"
+#else
 	    : "%xmm0"
+#endif
 	    );
     }
     return ret;

@@ -8,9 +8,21 @@ perf_t mbench_llls (stream_t *dest, stream_t *src1, stream_t *src2, stream_t *sr
 	ret.instructions = 2*dest->size / 16;
 	ret.bytes = 4*dest->size;
 	__asm__ __volatile__(
+#ifndef	USE_MIC
 	    "mfence;"
+#endif
 	    "_loop:"
-#ifdef USE_AVX
+#ifdef USE_MIC
+	    "vmovaps (%1), %%zmm0;"
+	    "vmovaps (%2), %%zmm0;"
+	    "vmovaps (%3), %%zmm0;"
+	    "vmovaps %%zmm0, (%0);"
+
+	    "vmovaps 64(%1), %%zmm0;"
+	    "vmovaps 64(%2), %%zmm0;"
+	    "vmovaps 64(%3), %%zmm0;"
+	    "vmovaps %%zmm0, 64(%0);"
+#elif (defined USE_AVX)
 	    "vmovaps (%1), %%ymm0;"
 	    "vmovaps (%2), %%ymm0;"
 	    "vmovaps (%3), %%ymm0;"
@@ -77,11 +89,15 @@ perf_t mbench_llls (stream_t *dest, stream_t *src1, stream_t *src2, stream_t *sr
 	    "add $128, %3;"
 	    "sub $128, %4;"
 	    "jnz _loop;"
+#ifndef	USE_MIC
 	    "mfence;"
+#endif
 	    :
 	    : "r" (dest->stream), "r"(src1->stream),
 	      "r"(src2->stream), "r" (src3->stream), "r" (src3->size)
-#ifdef USE_AVX
+#ifdef USE_MIC
+            : "%zmm0"
+#elif (defined USE_AVX)
 	    : "%ymm0"
 #else
 	    : "%xmm0"

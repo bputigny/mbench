@@ -6,7 +6,9 @@ perf_t mbench_latency_load (stream_t *stream) {
     int cpt = 0;
     if (stream->size >= 128) {
 	__asm__ __volatile__(
+#ifndef USE_MIC
 	    "mfence;"
+#endif
 	    "_loop:"
 	    
 	    "mov 112(%%rbx,%%rcx,8), %%rbx;"
@@ -21,7 +23,9 @@ perf_t mbench_latency_load (stream_t *stream) {
 	    "add $8, %%rcx;"
 	    "sub $128, %%rax;"
 	    "jnz _loop;"
+#ifndef	USE_MIC
 	    "mfence;"
+#endif
 	    : "=c" (cpt)
 	    : "a" (stream->size), "b" (stream->stream), "c" (0)
 	    );

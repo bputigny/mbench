@@ -31,9 +31,6 @@ AC_CHECK_HEADERS([sys/ioctl.h])
 
 AC_TYPE_UINT64_T
 AC_TYPE_SIZE_T
-AC_FUNC_ALLOCA
-AC_FUNC_MALLOC
-AC_FUNC_REALLOC
 
 AC_ARG_WITH([papi],
 	[AS_HELP_STRING([--with-papi],
@@ -45,6 +42,7 @@ CPPFLAGS="$CPPFLAGS $PAPI_CPPFLAGS"
 CFLAGS="$CFLAGS $PAPI_CFLAGS -fopenmp -Wall"
 LDFLAGS="$PAPI_LIBS $LDFLAGS"
 
+# AVX detection
 AC_MSG_CHECKING([if the assembler supports vmovaps and %ymm0])
 AC_COMPILE_IFELSE(
   [AC_LANG_SOURCE([
@@ -62,5 +60,29 @@ AC_MSG_RESULT($enable_avx)
 AS_IF([test "x$enable_avx" != "xno"], [
 	    CPPFLAGS="$CPPFLAGS -DUSE_AVX"
 ])
+
+# MIC detection
+AC_MSG_CHECKING([if the assembler supports vmovaps and %zmm0])
+AC_COMPILE_IFELSE(
+  [AC_LANG_SOURCE([
+    void f(void) { void *buffer; __asm__ __volatile__("vmovaps (%%rbx), %%zmm0;" : : "b"(buffer) : "%zmm0"); }
+  ])], [mic_supported=yes], [mic_supported=no])
+AC_MSG_RESULT($mic_supported)
+
+AC_MSG_CHECKING([if MIC is enabled])
+AC_ARG_ENABLE([mic],
+	      AS_HELP_STRING([--disable-mic],
+			[Disable MIC extention]),
+	      [enable_mic=$enableval], [enable_mic=$mic_supported])
+AC_MSG_RESULT($enable_mic)
+
+AS_IF([test "x$enable_mic" != "xno"], [
+	    CPPFLAGS="$CPPFLAGS -DUSE_MIC"
+])
+
+if test "x$HOSTCC" = x; then
+  HOSTCC="$CC"
+fi
+AC_SUBST(HOSTCC)
 
 AC_OUTPUT
