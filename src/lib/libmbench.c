@@ -265,14 +265,18 @@ void mbench_flush_stream (stream_t *s) {
 	if (s->stream) {
 #ifndef USE_MIC
 		__asm__ __volatile__("mfence;"::);
-#endif
 		for (i=0; i<s->size; i+=16) {
 			__asm__ __volatile__("clflush (%0);"
 					:
 					: "r" (&addr[i]));
 		}
-#ifndef USE_MIC
 		__asm__ __volatile__("mfence;"::);
+#else
+		for (i=0; i<s->size; i+=16) {
+			__asm__ __volatile__("clevict0 (%0);"
+					:
+					: "r" (&addr[i]));
+		}
 #endif
 	}
 }
