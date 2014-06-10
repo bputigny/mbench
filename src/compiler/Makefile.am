@@ -1,4 +1,4 @@
-BUILT_SOURCES	= parser.h
+BUILT_SOURCES	= parser.h parser.c scanner.c
 
 AM_YFLAGS	= -d
 AM_CFLAGS	= -I$(srcdir)/include
