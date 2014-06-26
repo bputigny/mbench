@@ -71,12 +71,12 @@ AC_MSG_RESULT($mic_supported)
 
 AC_MSG_CHECKING([if MIC is enabled])
 AC_ARG_ENABLE([mic],
-	      AS_HELP_STRING([--disable-mic],
-			[Disable MIC extention]),
-	      [enable_mic=$enableval], [enable_mic=$mic_supported])
+	      AS_HELP_STRING([--enable-mic],
+			[Enable Intel Xeon Phi (MIC) support]),
+	      [enable_mic=$enableval], [enable_mic=no])
 AC_MSG_RESULT($enable_mic)
 
-AS_IF([test "x$enable_mic" != "xno"], [
+AS_IF([test "x$enable_mic" != "xno" && test "x$mic_supported" != "xno"], [
 	    CPPFLAGS="$CPPFLAGS -DUSE_MIC"
 ])
 
