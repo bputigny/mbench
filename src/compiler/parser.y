@@ -7,8 +7,8 @@
 #include <symbol.h>
 #include <parser.h>
 
-    extern int yylex ();
-    extern int yyerror (char *s);
+extern int yylex ();
+extern int yyerror (char *s);
 
 stream_tab_t *stream_tab = NULL;
 run_tab_t *run_tab = NULL;
@@ -28,32 +28,45 @@ unsigned thread_id_max = 0;
 
 %token <num> NUM UNIT
 %token <str> ID
-%token THREAD TIME RUNTIME_SIZE
+%token THREAD TIME RUNTIME_SIZE ALLOCATED_BY
 
-%type <num>		size
-%type <stream>		def
-%type <run>		run basic_run
-%type <run_l>		run_lst
-%type <func>		function
-%type <binding>		binding
-%type <num_table>	num_lst
-%type <str>		arg_lst
+%type <num>         size numa_allocator
+%type <stream>      def
+%type <run>         run basic_run
+%type <run_l>       run_lst
+%type <func>        function
+%type <binding>     binding
+%type <num_table>   num_lst
+%type <str>         arg_lst
 
 %start benchmark
 
 %%
 
 benchmark
-: stream_def_lst run_lst		{run_tab = $2;}
+: stream_def_lst run_lst        {run_tab = $2;}
 ;
 
 stream_def_lst
-:  stream_def_lst def ';'		{stream_table_add (stream_tab, $2);}
+:  stream_def_lst def ';'       {stream_table_add (stream_tab, $2);}
 |
 ;
 
 def
-: ID '=' size				{$$.id = $1; if ($3==-1) {; $$.type=DYNAMIC;} else {$$.byte_size = $3; $$.type=STATIC;}}
+: ID '=' size numa_allocator    {   $$.id = $1;
+                                    $$.alloc_by = $4;
+                                    if ($3==-1) {
+                                        $$.type=DYNAMIC;
+                                    }
+                                    else {
+                                        $$.byte_size = $3; $$.type=STATIC;
+                                    }
+                                }
+;
+
+numa_allocator
+: ALLOCATED_BY NUM              {  $$ = $2; if ($2>thread_id_max) thread_id_max = $2; }
+|                               { $$ = 0; } // if not specified alloc with OMP master
 ;
 
 size

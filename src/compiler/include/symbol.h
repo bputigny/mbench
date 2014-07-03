@@ -27,6 +27,7 @@ typedef struct {
 typedef struct {
     char *id;
     uint64_t byte_size;
+    int alloc_by;
     enum {STATIC, DYNAMIC} type;
 } stream_t;
 
