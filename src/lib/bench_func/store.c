@@ -3,6 +3,8 @@
 
 perf_t mbench_store (stream_t *s) {
     perf_t ret = {s->size, s->size/16};
+    uint64_t unused0, unused1;
+
     if (s->size >= 128) {
 	__asm__ __volatile__(
 /*	    "movlpd (%%rbx), %%xmm0;" dead code, was used for pointer chasing in old revisions */
@@ -34,7 +36,7 @@ perf_t mbench_store (stream_t *s) {
 #ifndef USE_MIC
 	    "mfence;"
 #endif
-	    :
+	    : "=b" (unused0), "=c" (unused1)
 	    : "b"(s->stream), "c" (s->size)
 #ifdef USE_MIC
             : "%zmm0"

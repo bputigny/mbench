@@ -4,6 +4,8 @@
 perf_t mbench_latency_load (stream_t *stream) {
     perf_t ret = {0, 0};
     int cpt = 0;
+    uint64_t unused0, unused1;
+
     if (stream->size >= 128) {
 	__asm__ __volatile__(
 #ifndef USE_MIC
@@ -26,7 +28,7 @@ perf_t mbench_latency_load (stream_t *stream) {
 #ifndef	USE_MIC
 	    "mfence;"
 #endif
-	    : "=c" (cpt)
+	    : "=c" (cpt), "=a" (unused0), "=b" (unused1)
 	    : "a" (stream->size), "b" (stream->stream), "c" (0)
 	    );
 	ret.instructions = cpt;

@@ -3,6 +3,7 @@
 
 perf_t mbench_llls (stream_t *dest, stream_t *src1, stream_t *src2, stream_t *src3) {
     perf_t ret = {0, 0};
+    uint64_t unused0, unused1, unused2, unused3, unused4;
 
     if (dest->size >= 128) {
 	ret.instructions = 2*dest->size / 16;
@@ -92,9 +93,10 @@ perf_t mbench_llls (stream_t *dest, stream_t *src1, stream_t *src2, stream_t *sr
 #ifndef	USE_MIC
 	    "mfence;"
 #endif
-	    :
-	    : "r" (dest->stream), "r"(src1->stream),
-	      "r"(src2->stream), "r" (src3->stream), "r" (src3->size)
+	    : "=r" (unused0), "=r" (unused1), "=r" (unused2), "=r" (unused3),
+          "=r" (unused4)
+	    : "0" (dest->stream), "1"(src1->stream),
+	      "2"(src2->stream), "3" (src3->stream), "4" (src3->size)
 #ifdef USE_MIC
             : "%zmm0"
 #elif (defined USE_AVX)

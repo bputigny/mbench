@@ -3,6 +3,7 @@
 
 perf_t mbench_copy_sse (stream_t *dest, stream_t *src) {
     perf_t ret = {src->size, 2*src->size / 16};
+    uint64_t unused0, unused1, unused2;
 
     if (dest->size >= 128) {
 	__asm__ __volatile__(
@@ -51,7 +52,7 @@ perf_t mbench_copy_sse (stream_t *dest, stream_t *src) {
 	    "jnz _loop;"
 	    "mfence;"
 #endif
-	    :
+	    : "=a" (unused0), "=b" (unused1), "=c" (unused2)
 	    : "a" (dest->stream), "b"(src->stream), "c" (dest->size)
 #ifdef USE_MIC
 	    : "%zmm0"
