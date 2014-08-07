@@ -10,7 +10,7 @@ perf_t mbench_clflush(stream_t *s) {
 #ifndef USE_MIC
 		__asm__ __volatile__("mfence;"::);
 #endif
-		for (i=0; i<s->size; i+=16) {
+		for (i=0; i<s->size; i+=64) {
 			__asm__ __volatile__("clflush (%%rax);":: "a" (&addr[i]));
 		}
 #ifndef USE_MIC
