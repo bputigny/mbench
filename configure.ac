@@ -5,6 +5,7 @@ AC_INIT([mbench], [0.2])
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 LT_INIT
 AM_INIT_AUTOMAKE([foreign -Wall subdir-objects])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_PREREQ(2.63)
 AC_PROG_CC
 AC_PROG_LEX
